@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, jsonify, Response,abort
+from flask import Flask, request, redirect, url_for, jsonify, Response,abort,render_template
 from werkzeug.utils import secure_filename
 from Bio.Blast.Applications import NcbiblastpCommandline
 import os
@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "Hello World!"
+    return render_template('blastAas.html')
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -45,14 +45,14 @@ def list_files():
     lst['files'] = []
     for file in os.listdir(UPLOAD_FOLDER):
         if file.endswith(".pep"):
-            print(os.path.join(UPLOAD_FOLDER, file))
-            lst['files'].append(file)
+        	print(os.path.join(UPLOAD_FOLDER, file))
+	        lst['files'].append(file)
     return jsonify(lst)
 
 @app.route('/blastp/analyze', methods=['GET'])
 def analyzeSequence():
     tmpFileName = TMP_QUERY_FOLDER+"query-"+str(random.randint(1,99999))
-    tmpFile = open(tmpFileName,"w")     
+    tmpFile = open(tmpFileName,"w") 	
     tmpFile.write(request.args.get('query'))
     tmpFile.close()
     query = tmpFileName
@@ -70,7 +70,7 @@ def analyzeSequence():
             #    result = result+'<tr>'
             #    for c in words:
             #        result = result +'<td>'+c+'</td>'
-            #    result = result+'</tr>'                                                                
+            #    result = result+'</tr>'								                                
             #else:
             result = result + line
     f.close()
@@ -86,6 +86,11 @@ def create_blast_db():
     print(str(output))
     return jsonify(output=str(output),error=str(err))
 
+
+@app.before_request
+def before_request():
+    print("Remote addr : "+request.remote_addr)
+
 @app.after_request
 def apply_caching(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
@@ -96,7 +101,8 @@ def apply_caching(response):
 if __name__ == '__main__':
     app.run(
         debug=True,
-        port=8080,
+        port=80,
         host="0.0.0.0",
         threaded=True
     )
+
