@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <head>
   <title>Blast as a service</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='blastAasApp.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='lib/ng-file-upload-shim.min.js') }}"></script>
@@ -51,9 +51,11 @@
         <input ng-hide="!queryData" type="submit" ng-click="analyze()" value="Analyze!" class="myButton" />
     </div>
     <div class="resultPanel">
-      <p>RESULT HERE
+      {% raw %}
+      <p>
         {{ result }}
       </p>
+      {% endraw %}
         Search sample : LHTHKHVSSHTQTCIFHPSGANS
     </div>
     <div class="footer">
