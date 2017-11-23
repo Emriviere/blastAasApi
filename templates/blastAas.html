@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="blastAasApp" ng-controller="blastAasCtrl">
+<meta charset="UTF-8">
+<head>
+  <title>Blast as a service</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='blastAasApp.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ng-file-upload-shim.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='lib/ng-file-upload.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='blastAasCtrl.js') }}"></script>
+</head>
+<body>
+<div id="content">
+  <div class="title"><h1>Blast as a service</h1></div>
+  <div class="mainPanel">
+    <div class="dbSelectionPanel">
+      <fieldset>
+        <legend>Select an existing database</legend>
+          Database :<select ng-model="selectedDatabase" name="selectedDb" ng-options="dbfile as dbfile for dbfile in dbfiles"></select>
+    </fieldset>
+    </div>
+    <div class="dbUploadPanel">
+      <fieldset>
+        <legend>Upload a new database</legend>
+        <form name="dbUploadForm" ng-hide="uploadProgress >= 0">
+          Select a file: <input ngf-select="" ng-model="dbFileToUpload" name="dbFileToUpload" ngf-accept="'.pep,.fsa'" required="" type="file">
+          <input ng-hide="!dbFileToUpload" ng-click="uploadDb(dbFileToUpload)" class="myButton" value="Upload" />
+        </form>
+        <div ng-show="uploadProgress >= 0">
+          Upload in progress
+          <span class="progress">
+              <div style="width:{{uploadProgress}}%" ng-bind="dbFileToUpload.name+' '+uploadProgress + '%'" class="ng-binding"></div>
+          </span>
+        </div>
+        <span ng-show="dbFile.result">Upload Successful</span>
+      </fieldset>
+    </div>
+    <div class="queryInputPanel">
+            Query :<input type=text ng-model="queryData" name="queryData" size="100"></input><br />
+    </div>
+    <div class="optionsPanel">
+      OPTIONS
+
+    </div>
+    <div class="analyzePanel">
+      <ul>
+        <li ng-hide="queryData">No query, I need to look for something!</li>
+        <li ng-hide="selectedDatabase">No database selected!</li>
+      </ul>
+        <input ng-hide="!queryData" type="submit" ng-click="analyze()" value="Analyze!" class="myButton" />
+    </div>
+    <div class="resultPanel">
+      <p>RESULT HERE
+        {{ result }}
+      </p>
+        Search sample : LHTHKHVSSHTQTCIFHPSGANS
+    </div>
+    <div class="footer">
+      Copyrightlol
+    </div>
+  </div>
+</div>
+</body>
