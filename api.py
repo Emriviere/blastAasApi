@@ -60,7 +60,7 @@ def blastp_analyze():
     query = tmpFileName
     db = UPLOAD_FOLDER+request.args.get('db')
     result_file='tmp_res'
-    outFormat = 7
+    outFormat = request.args.get('outputFormat')
     blastx_cline = NcbiblastpCommandline(query=query, db=db, evalue=50.0,outfmt=outFormat, out=TMP_RESULT_FOLDER+result_file, matrix="PAM30")
     stdout, stderr = blastx_cline()
     #f = open(TMP_RESULT_FOLDER+result_file ,'r')
@@ -88,7 +88,7 @@ def blastn_analyze():
     query = tmpFileName
     db = UPLOAD_FOLDER+request.args.get('db')
     result_file='tmp_res'
-    outFormat = 7
+    outFormat = request.args.get('outputFormat')
     blastx_cline = NcbiblastnCommandline(query=query, db=db, evalue=50.0,outfmt=outFormat, out=TMP_RESULT_FOLDER+result_file)
     stdout, stderr = blastx_cline()
     #f = open(TMP_RESULT_FOLDER+result_file ,'r')
