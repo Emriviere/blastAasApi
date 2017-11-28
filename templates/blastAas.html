@@ -39,7 +39,7 @@
     <div class="queryInputPanel">
 	<fieldset>
 	    <legend>Query</legend>
-            <input type=text ng-model="queryData" name="queryData" size="100"></input><br />
+            <textarea ng-model="queryData" style="resize:none" name="queryData" rows="4" cols="70">Paste your sequence here</textarea><br />
 	</fieldset>
     </div>
     <div class="optionsPanel">
@@ -51,6 +51,7 @@
 	  <span class="slider"></span>
       </label>
 	Blastn
+	<p>Output mode: <select ng-model="outputFormat" ng-init="outputFormat = outputs[0]" name="outputFormat" ng-options="outputFormat as outputFormat for outputFormat in outputs"></select></p>
 	</fieldset>
     </div>
     <div class="analyzePanel">
@@ -64,14 +65,15 @@
     </div>
     <div class="resultPanel">
       {% raw %}
-      <p>
-        {{ result }}
-      </p>
+      <div ng-hide="!result" class="resultText" >
+       <p>{{ result }}</p>
+      </div>
       {% endraw %}
         Search sample : LHTHKHVSSHTQTCIFHPSGANS
     </div>
     <div class="footer">
-     	API powered by Python3 Bio.Blast.Applications
+     	<p>API powered by Python3 Bio.Blast.Applications
+	Code is available <a href="https://github.com/Emriviere/blastAasApi">here</a></p>
     </div>
   </div>
 </div>
