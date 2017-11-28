@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, url_for, jsonify, Response,abort,render_template
 from werkzeug.utils import secure_filename
 from Bio.Blast.Applications import NcbiblastpCommandline
+from Bio.Blast.Applications import NcbiblastnCommandline
+
 import os
 import subprocess
 import random
@@ -10,11 +12,11 @@ UPLOAD_FOLDER = '/home/blast/blastAasFiles/uploadedFiles/'
 TMP_QUERY_FOLDER = '/home/blast/blastAasFiles/tmpQueryFiles/'
 TMP_RESULT_FOLDER = '/home/blast/blastAasFiles/tmpResult/'
 
-ALLOWED_EXTENSIONS = set(['pep'])
+ALLOWED_EXTENSIONS = set(['pep','fasta','txt'])
 
 
 app = Flask(__name__)
-
+#app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 @app.route('/')
 def hello():
@@ -44,13 +46,13 @@ def list_files():
     lst = dict()
     lst['files'] = []
     for file in os.listdir(UPLOAD_FOLDER):
-        if file.endswith(".pep"):
+        if file.endswith(".pep") or file.endswith(".fasta") or file.endswith(".txt"):
         	print(os.path.join(UPLOAD_FOLDER, file))
 	        lst['files'].append(file)
     return jsonify(lst)
 
 @app.route('/blastp/analyze', methods=['GET'])
-def analyzeSequence():
+def blastp_analyze():
     tmpFileName = TMP_QUERY_FOLDER+"query-"+str(random.randint(1,99999))
     tmpFile = open(tmpFileName,"w") 	
     tmpFile.write(request.args.get('query'))
@@ -76,6 +78,35 @@ def analyzeSequence():
     f.close()
     os.remove(tmpFileName)
     return result
+
+@app.route('/blastn/analyze', methods=['GET'])
+def blastn_analyze():
+    tmpFileName = TMP_QUERY_FOLDER+"query-"+str(random.randint(1,99999))
+    tmpFile = open(tmpFileName,"w")
+    tmpFile.write(request.args.get('query'))
+    tmpFile.close()
+    query = tmpFileName
+    db = UPLOAD_FOLDER+request.args.get('db')
+    result_file='tmp_res'
+    outFormat = 7
+    blastx_cline = NcbiblastnCommandline(query=query, db=db, evalue=50.0,outfmt=outFormat, out=TMP_RESULT_FOLDER+result_file)
+    stdout, stderr = blastx_cline()
+    #f = open(TMP_RESULT_FOLDER+result_file ,'r')
+    result = ""
+    with open(TMP_RESULT_FOLDER+result_file) as f:
+        for line in f:
+            #if(outFormat==7):
+            #    words=line.split()
+            #    result = result+'<tr>'
+            #    for c in words:
+            #        result = result +'<td>'+c+'</td>'
+            #    result = result+'</tr>'
+            #else:
+            result = result + line
+    f.close()
+    os.remove(tmpFileName)
+    return result
+
 
 @app.route('/createblastdb', methods=['POST'])
 def create_blast_db():
