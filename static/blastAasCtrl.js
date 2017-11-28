@@ -2,6 +2,7 @@ app.controller("blastAasCtrl",function($scope,$http,$q, Upload){
   console.log("Generating parameters");
 
   var apiUrlBase = "http://176.31.87.152";
+  $scope.outputs = ["0","1","2","3","4","5","6","7"];
 
   //Getting database files
   getDbFilesList()
@@ -17,6 +18,17 @@ app.controller("blastAasCtrl",function($scope,$http,$q, Upload){
       console.log(response);
      });
   }
+
+   $scope.blastMode = "blastp";
+   $scope.changeBlastMode =function(){
+     console.log("Changing blast mode");
+     if($scope.blastMode == "blastp"){
+	$scope.blastMode = "blastn";
+     }else{
+        $scope.blastMode = "blastp";	
+     }
+   }
+   
 
    $scope.uploadDb = function() {
     console.log("Let's upload"+$scope.dbFileToUpload)
@@ -57,7 +69,8 @@ app.controller("blastAasCtrl",function($scope,$http,$q, Upload){
    $scope.analyze = function() {
      console.log("Let's analyze this !")
      if ($scope.selectedDatabase && $scope.queryData) {
-       url = apiUrlBase+"/blastp/analyze?query="+$scope.queryData+"&db="+$scope.selectedDatabase
+
+       url = apiUrlBase+"/"+$scope.blastMode+"/analyze?query="+$scope.queryData+"&db="+$scope.selectedDatabase+"&outputFormat="+$scope.outputFormat
        $http({
               method : 'GET',
               headers: {'Content-Type': 'application/json'},
@@ -65,7 +78,7 @@ app.controller("blastAasCtrl",function($scope,$http,$q, Upload){
              }).then(function successCallback(response){
                   $scope.result=response.data;
              }, function errorCallback(response) {
-              console.log(response);
+              	  $scope.result = "Internal error: "+response.status+" \n Are you using the right blast mode?";
              });
             $scope.text = '';
           };
