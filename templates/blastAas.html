@@ -37,18 +37,30 @@
       </fieldset>
     </div>
     <div class="queryInputPanel">
-            Query :<input type=text ng-model="queryData" name="queryData" size="100"></input><br />
+	<fieldset>
+	    <legend>Query</legend>
+            <input type=text ng-model="queryData" name="queryData" size="100"></input><br />
+	</fieldset>
     </div>
     <div class="optionsPanel">
-      OPTIONS
-
+	<fieldset>
+	<legend>Options</legend>
+	Blastp
+      <label class="switch">
+	  <input type="checkbox" ng-model="blastModeCheckBox" ng-change="changeBlastMode()">
+	  <span class="slider"></span>
+      </label>
+	Blastn
+	</fieldset>
     </div>
     <div class="analyzePanel">
+	{% raw %}
       <ul>
         <li ng-hide="queryData">No query, I need to look for something!</li>
         <li ng-hide="selectedDatabase">No database selected!</li>
       </ul>
-        <input ng-hide="!queryData" type="submit" ng-click="analyze()" value="Analyze!" class="myButton" />
+        <input ng-hide="!queryData || !selectedDatabase" type="submit" ng-click="analyze()" value="Analyze using {{ blastMode }}" class="myButton" />
+	 {% endraw %}
     </div>
     <div class="resultPanel">
       {% raw %}
@@ -59,7 +71,7 @@
         Search sample : LHTHKHVSSHTQTCIFHPSGANS
     </div>
     <div class="footer">
-      Copyrightlol
+     	API powered by Python3 Bio.Blast.Applications
     </div>
   </div>
 </div>
