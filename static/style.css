@@ -75,6 +75,11 @@ div.analyzePanel {
   grid-row: row 3;
   background-color: #00a3cc;
   padding : 5px;
+  text-align: center;
+}
+
+ul {
+  text-align: left;
 }
 
 div.footer {
