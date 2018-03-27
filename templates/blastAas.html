@@ -17,7 +17,7 @@
     <div class="dbSelectionPanel">
       <fieldset>
         <legend>Select an existing database</legend>
-          Database :<select ng-model="selectedDatabase" name="selectedDb" ng-options="dbfile as dbfile for dbfile in dbfiles"></select>
+          Database: <select ng-model="selectedDatabase" name="selectedDb" ng-options="dbfile as dbfile for dbfile in dbfiles"></select>
     </fieldset>
     </div>
     <div class="dbUploadPanel">
@@ -33,6 +33,14 @@
               <div style="width:{{uploadProgress}}%" ng-bind="dbFileToUpload.name+' '+uploadProgress + '%'" class="ng-binding"></div>
           </span>
         </div>
+	<div ng-hide="!dbFileToUpload">
+		Protein
+	      <label class="switch">
+        	  <input type="checkbox" ng-model="blastDbCheckBox" ng-change="changeBlastDbMode()">
+	          <span class="slider"></span>
+	      </label>
+		Nucleotid
+	</div>
         <span ng-show="dbFile.result">Upload Successful</span>
       </fieldset>
     </div>
