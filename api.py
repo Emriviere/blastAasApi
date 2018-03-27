@@ -110,8 +110,9 @@ def blastn_analyze():
 
 @app.route('/createblastdb', methods=['POST'])
 def create_blast_db():
+    mode = request.args.get('dbMode')
     db = UPLOAD_FOLDER+request.args.get('db')
-    cmd = 'makeblastdb -in '+db+' -dbtype nucl'
+    cmd = 'makeblastdb -in '+db+' -dbtype '+mode
     process = subprocess.Popen(cmd,stdout=subprocess.PIPE, shell=True)
     (output, err) = process.communicate()
     print(str(output))
