@@ -19,6 +19,16 @@ app.controller("blastAasCtrl",function($scope,$http,$q, Upload){
      });
   }
 
+   $scope.dbMode = "prot";
+   $scope.changeBlastDbMode = function(){
+	console.log("changing blast db mode");
+	if($scope.dbMode == "prot"){
+		$scope.dbMode = "nucl";
+	}else{
+		$scope.dbMode = "prot";
+	}
+   }
+
    $scope.blastMode = "blastp";
    $scope.changeBlastMode =function(){
      console.log("Changing blast mode");
@@ -44,7 +54,7 @@ app.controller("blastAasCtrl",function($scope,$http,$q, Upload){
      }).then(function (resp) {
            $scope.uploadStatus = "File uploaded, creating blast database..."
             console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-            url = apiUrlBase+"/createblastdb?db="+resp.config.data.file.name
+            url = apiUrlBase+"/createblastdb?db="+resp.config.data.file.name+"&dbMode="+$scope.dbMode
             $scope.uploadProgress = 0+"%"
             $http({
                    method : 'POST',
